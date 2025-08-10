@@ -14,16 +14,23 @@ OUTPUT_FILE="results/output_app.txt"
 go run ../cmd/main.go < "$PIPE_IN" > "$PIPE_OUT" &
 
 # Отправляем команду echo в входной pipe
-echo "cd Desktop/Go/WbGolangCourse/l2/l2.15/integration_test" > "$PIPE_IN"
+echo "cd bin" > "$PIPE_IN"
 echo "pwd" > "$PIPE_IN"
-pwd > results/output_bash.txt
+
+# Читаем из pipe с выводом команды и сохраняем в файл
+read -r output < "$PIPE_OUT"
+echo "$output" > "$OUTPUT_FILE"
+
+
+echo "$HOME/bin" > results/output_bash.txt
+
+
 
 # Закрываем входной канал - сигнализируем, что команд больше не будет
 exec 3>"$PIPE_IN"
 exec 3>&-
 
-# Читаем из pipe с выводом команды и сохраняем в файл
-cat "$PIPE_OUT" > "$OUTPUT_FILE"
+
 
 # Удаляем именованные каналы
 rm "$PIPE_IN" "$PIPE_OUT"
